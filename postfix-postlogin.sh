@@ -10,11 +10,7 @@
 # david . bennett @ percona . com - 12/27/2016
 
 #save these variable into postfix-postogin.conf file 
-#mysql_user=root
-#mysql_password=password
-#mysql_host=127.0.0.1
-#mysql_port=3306
-#mysql_database=test
+
 
 source postfix-postlogin.conf
  
@@ -27,9 +23,8 @@ mysql_exec() {
       "user=${mysql_user}" \
       "password=${mysql_password}" \
       "host=${mysql_host}" \
-      "port=${mysql_port}" \
-      "database=${mysql_database}" \
-      | mysql --defaults-file=/dev/stdin "${opts}" -e "${query}"
+      "port=${mysql_port}" \      
+      | mysql --defaults-file=/dev/stdin "${opts}" -e "${query}" "${mysql_database}"
   )
 }
  
