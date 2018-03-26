@@ -24,11 +24,16 @@ mysql_exec() {
       "password=${mysql_password}" \
       "host=${mysql_host}" \
       "port=${mysql_port}" \
-      | mysql --defaults-file=/dev/stdin "${opts}" -e "${query}" "${mysql_database}"
+      "database=${mysql_database}" \
+      | mysql --defaults-file=/dev/stdin "${opts}" -e "${query}" 
   )
+  if [ ! -z $mysql_exec_result];then 
+        echo `date` ": $mysql_exec_result
+" >> $logfile
+  fi
 }
  
-#sasl_username
+#parse postfix attributes 
 declare -A data_in
 while IFS='$\n' read -r line; do
     # do whatever with line
@@ -42,9 +47,8 @@ done
 
 
 if [ ${data[request]}=="smtpd_access_policy" -a \( ! -z ${data_in[client_address]} \) -a \( ! -z ${data_in[sasl_username]} \) ];then
-
-   # echo "UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE CONCAT(A.mail_acc, '@', B.domain_name)='"${data_in[sasl_username]}"' LIMIT1"
-   mysql_exec "UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE CONCAT(A.mail_acc, '@', B.domain_name)='"${data_in[sasl_username]}"' LIMIT1"
+   
+   mysql_exec "UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE CONCAT(A.mail_acc, '@', B.domain_name)='"${data_in[sasl_username]}"'"
 
 fi
 
