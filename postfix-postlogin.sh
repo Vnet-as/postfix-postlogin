@@ -2,12 +2,8 @@
  
 # call mysql client from shell script without 
 # passing credentials on command line
- 
-# This demonstrates small single queries using
-# the -e parameter.   Credentials and connection
-# info are sent through standard input.
- 
-# david . bennett @ percona . com - 12/27/2016
+# Peter Vilhan
+#
 
 #save these variables into postfix-postogin.conf file 
 #user=xyz
