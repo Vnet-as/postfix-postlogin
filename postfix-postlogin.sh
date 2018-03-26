@@ -28,7 +28,7 @@ mysql_exec() {
       "user=${mysql_user}" \
       "password=${mysql_password}" \
       "host=${mysql_host}" \
-      "port=${mysql_port}" \      
+      "port=${mysql_port}" \
       | mysql --defaults-file=/dev/stdin "${opts}" -D "${mysql_database}" -e "${query}" 
   )
   if [ ! -z $mysql_exec_result];then 
