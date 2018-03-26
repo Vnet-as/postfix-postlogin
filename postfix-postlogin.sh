@@ -9,8 +9,13 @@
  
 # david . bennett @ percona . com - 12/27/2016
 
-#save these variable into postfix-postogin.conf file 
-
+#save these variables into postfix-postogin.conf file 
+#user=xyz
+#password=strong_paass121
+#host=10.0.0.1 
+#port=3306
+#database=db_name
+#logfile=/path/to/logfile
 
 source postfix-postlogin.conf
  
@@ -29,7 +34,7 @@ mysql_exec() {
   )
   if [ ! -z $mysql_exec_result];then 
         echo `date` ": $mysql_exec_result
-" >> $logfile
+" >> ${logfile}
   fi
 }
  
