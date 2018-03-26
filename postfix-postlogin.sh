@@ -20,8 +20,7 @@
 source postfix-postlogin.conf
  
 mysql_exec() {
-  local query="$1"
-  local opts="$2"
+  local query="$1"  
   mysql_exec_result=$(
     printf "%s\n" \
       "[client]" \
@@ -29,7 +28,7 @@ mysql_exec() {
       "password=${mysql_password}" \
       "host=${mysql_host}" \
       "port=${mysql_port}" \
-      | mysql --defaults-file=/dev/stdin "${opts}" -D "${mysql_database}" -e "${query}" 
+      | mysql --defaults-file=/dev/stdin -D "${mysql_database}" -e "${query}" 
   )
   if [ ! -z $mysql_exec_result];then 
         echo `date` ": $mysql_exec_result
