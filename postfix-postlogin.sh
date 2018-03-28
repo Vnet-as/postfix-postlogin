@@ -12,8 +12,11 @@
 #port=3306
 #database=db_name
 #logfile=/path/to/logfile
+#debug=0
 
-source postfix-postlogin.conf
+SCRIPT=`realpath $0`
+SCRIPTPATH=`dirname $SCRIPT`
+source $SCRIPTPATH/postfix-postlogin.conf
  
 mysql_exec() {
   local query="$1"  
@@ -31,7 +34,11 @@ mysql_exec() {
 " >> ${logfile}
   fi
 }
- 
+
+if[ $debug -eq 1 ];then
+    echo "Data in:\n" >> ${logfile} 
+fi
+
 #parse postfix attributes 
 declare -A data_in
 while IFS='$\n' read -r line; do
@@ -41,18 +48,27 @@ while IFS='$\n' read -r line; do
         val=${line#*=}    
         data_in[${var}]="${val}"
     fi
+    if[ $debug -eq 1 ];then
+        echo "Parsed: $var=$val" >> ${logfile}
+    fi
 done
 
 
+if[ $debug -eq 1 ];then
+    echo "Decision: req: ${data_in[request]} ip: ${data_in[client_address]} login: ${data_in[sasl_username]}\n" >> ${logfile} 
+fi
 
 if [ ${data[request]}=="smtpd_access_policy" -a \( ! -z ${data_in[client_address]} \) -a \( ! -z ${data_in[sasl_username]} \) ];then
    
    mysql_exec "UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE CONCAT(A.mail_acc, '@', B.domain_name)='"${data_in[sasl_username]}"'"
 
+   if[ $debug -eq 1 ];then
+        echo "Runnning: UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE CONCAT(A.mail_acc, '@', B.domain_name)='"${data_in[sasl_username]}"'" >> ${logfile} 
+   fi
+
 fi
 
-echo "action=dunno
+printf "%s\n\n" "action=dunno"
 
-"
 
 exit 0
