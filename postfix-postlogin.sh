@@ -65,7 +65,7 @@ if [ $debug -eq 1 ];then
 fi
 
 if [ ${data_in[request]}=="smtpd_access_policy" -a \( ! -z ${data_in[client_address]} \) -a \( ! -z ${data_in[sasl_username]} \) ];then
-   
+   #treba prerobit update WHERE A.mail_acc='peter.vilhan' AND B.domain_name='vnet.eu'
    mysql_exec "UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE CONCAT(A.mail_acc, '@', B.domain_name)='"${data_in[sasl_username]}"'"
 
    if [ $debug -eq 1 ];then
