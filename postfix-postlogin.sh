@@ -27,7 +27,7 @@ mysql_exec() {
       "password=${mysql_password}" \
       "host=${mysql_host}" \
       "port=${mysql_port}" \
-      | mysql --defaults-file=/dev/stdin -D "${mysql_database}" -e "${query}" 
+      | /usr/bin/mysql --defaults-file=/dev/stdin -D "${mysql_database}" -e "${query}" 
   )
   if [ ! -z $mysql_exec_result];then 
         echo `date` ": $mysql_exec_result
@@ -47,7 +47,10 @@ while IFS='$\n' read -r line; do
         var=${line%=*}
         val=${line#*=}    
         data_in[${var}]="${val}"
+    else
+        break
     fi
+
     if [ $debug -eq 1 ];then
         echo "Parsed: $var=$val" >> ${logfile}
     fi
@@ -68,7 +71,7 @@ if [ ${data_in[request]}=="smtpd_access_policy" -a \( ! -z ${data_in[client_addr
 
 fi
 
-printf "%s\n\n" "action=dunno"
+printf "%s\n\n\n" "action=DUNNO"
 
 
 exit 0
