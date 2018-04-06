@@ -48,6 +48,9 @@ while IFS='$\n' read -r line; do
         val=${line#*=}    
         data_in[${var}]="${val}"
     else
+        if [ $debug -eq 1 ];then
+                echo "Zaznamenane: ${data_in[@]}\n" >> ${logfile} 
+        fi
         break
     fi
 
