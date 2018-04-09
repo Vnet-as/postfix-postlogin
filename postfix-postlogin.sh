@@ -73,7 +73,7 @@ if [ ${data_in[request]}=="smtpd_access_policy" -a \( ! -z ${data_in[client_addr
    mysql_exec "UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE A.mail_acc='"$login"' AND B.domain_name='"$domain"'"
 
    if [ $debug -eq 1 ];then
-       echo "Runnning:  mysql_exec "UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE A.mail_acc='"$login"' AND B.domain_name='"$domain"'" > ${logfile}
+       echo "Runnning:  mysql_exec UPDATE mail_users A INNER JOIN domain B ON A.domain_id=B.domain_id SET last_login_date=NOW(),last_login_proto='SMTP',last_login_ip='"${data_in[client_address]}"' WHERE A.mail_acc='"$login"' AND B.domain_name='"$domain"'" >> ${logfile}
    fi
 
 fi
