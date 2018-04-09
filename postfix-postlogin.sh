@@ -29,7 +29,7 @@ mysql_exec() {
       "port=${mysql_port}" \
       | /usr/bin/mysql --defaults-file=/dev/stdin -D "${mysql_database}" -e "${query}" 
   )
-  if [ ! -z $mysql_exec_result];then 
+  if [ ! -z $mysql_exec_result ];then 
         echo `date` ": $mysql_exec_result
 " >> ${logfile}
   fi
@@ -49,7 +49,7 @@ while IFS='$\n' read -r line; do
         data_in[${var}]="${val}"
     else
         if [ $debug -eq 1 ];then
-                echo "Zaznamenane: ${data_in[@]}\n" >> ${logfile} 
+                echo "Zaznamenane: "${data_in[@]}"\n" >> ${logfile} 
         fi
         break
     fi
@@ -64,9 +64,8 @@ if [ $debug -eq 1 ];then
     echo "Decision: req: ${data_in[request]} ip: ${data_in[client_address]} login: ${data_in[sasl_username]}\n" >> ${logfile} 
 fi
 
-if [ ${data_in[request]}=="smtpd_access_policy" -a \( ! -z ${data_in[client_address]} \) -a \( ! -z ${data_in[sasl_username]} \) ];then
-   #treba prerobit update WHERE A.mail_acc='peter.vilhan' AND B.domain_name='vnet.eu'
-
+if [ ${data_in[request]} = "smtpd_access_policy" -a \( ! -z ${data_in[client_address]} \) -a \( ! -z ${data_in[sasl_username]} \) ];then
+  
    login=`echo ${data_in[sasl_username]} | cut -d'@' -f1`
    domain=`echo ${data_in[sasl_username]} | cut -d'@' -f2`
 
